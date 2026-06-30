@@ -134,20 +134,21 @@ class SearchStorage:
                 (
                     term,
                     ti.doc_freq,
-                    json.dumps([
-                        {
-                            "doc_id": p.doc_id,
-                            "term_freq": p.term_freq,
-                            "positions": p.positions,
-                        }
-                        for p in ti.postings
-                    ]),
+                    json.dumps(
+                        [
+                            {
+                                "doc_id": p.doc_id,
+                                "term_freq": p.term_freq,
+                                "positions": p.positions,
+                            }
+                            for p in ti.postings
+                        ]
+                    ),
                 )
                 for term, ti in index._terms.items()
             ]
             conn.executemany(
-                "INSERT OR REPLACE INTO terms (term, doc_freq, postings_json) "
-                "VALUES (?, ?, ?)",
+                "INSERT OR REPLACE INTO terms (term, doc_freq, postings_json) VALUES (?, ?, ?)",
                 term_data,
             )
 
@@ -193,11 +194,13 @@ class SearchStorage:
             postings_data = json.loads(postings_json)
             ti = TermInfo(doc_freq=doc_freq)
             for p_data in postings_data:
-                ti.postings.append(PostingEntry(
-                    doc_id=p_data["doc_id"],
-                    term_freq=p_data["term_freq"],
-                    positions=p_data.get("positions", []),
-                ))
+                ti.postings.append(
+                    PostingEntry(
+                        doc_id=p_data["doc_id"],
+                        term_freq=p_data["term_freq"],
+                        positions=p_data.get("positions", []),
+                    )
+                )
             index._terms[term] = ti
 
         return index

@@ -11,21 +11,121 @@ import re
 from dataclasses import dataclass, field
 
 # Common English stop words
-STOP_WORDS: frozenset[str] = frozenset({
-    "a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for",
-    "of", "with", "by", "from", "as", "is", "was", "are", "were", "been",
-    "be", "have", "has", "had", "do", "does", "did", "will", "would",
-    "could", "should", "may", "might", "shall", "can", "need", "dare",
-    "ought", "used", "it", "its", "he", "she", "they", "them", "their",
-    "this", "that", "these", "those", "i", "me", "my", "we", "our",
-    "you", "your", "his", "her", "not", "no", "nor", "so", "too",
-    "very", "just", "about", "above", "after", "again", "all", "also",
-    "any", "because", "before", "below", "between", "both", "each",
-    "few", "more", "most", "other", "some", "such", "than", "then",
-    "there", "here", "when", "where", "why", "how", "what", "which",
-    "who", "whom", "if", "while", "during", "into", "through", "up",
-    "out", "off", "over", "under", "further", "once", "only",
-})
+STOP_WORDS: frozenset[str] = frozenset(
+    {
+        "a",
+        "an",
+        "the",
+        "and",
+        "or",
+        "but",
+        "in",
+        "on",
+        "at",
+        "to",
+        "for",
+        "of",
+        "with",
+        "by",
+        "from",
+        "as",
+        "is",
+        "was",
+        "are",
+        "were",
+        "been",
+        "be",
+        "have",
+        "has",
+        "had",
+        "do",
+        "does",
+        "did",
+        "will",
+        "would",
+        "could",
+        "should",
+        "may",
+        "might",
+        "shall",
+        "can",
+        "need",
+        "dare",
+        "ought",
+        "used",
+        "it",
+        "its",
+        "he",
+        "she",
+        "they",
+        "them",
+        "their",
+        "this",
+        "that",
+        "these",
+        "those",
+        "i",
+        "me",
+        "my",
+        "we",
+        "our",
+        "you",
+        "your",
+        "his",
+        "her",
+        "not",
+        "no",
+        "nor",
+        "so",
+        "too",
+        "very",
+        "just",
+        "about",
+        "above",
+        "after",
+        "again",
+        "all",
+        "also",
+        "any",
+        "because",
+        "before",
+        "below",
+        "between",
+        "both",
+        "each",
+        "few",
+        "more",
+        "most",
+        "other",
+        "some",
+        "such",
+        "than",
+        "then",
+        "there",
+        "here",
+        "when",
+        "where",
+        "why",
+        "how",
+        "what",
+        "which",
+        "who",
+        "whom",
+        "if",
+        "while",
+        "during",
+        "into",
+        "through",
+        "up",
+        "out",
+        "off",
+        "over",
+        "under",
+        "further",
+        "once",
+        "only",
+    }
+)
 
 
 @dataclass
@@ -118,14 +218,29 @@ class PorterStemmer:
     def _step2(self, word: str) -> str:
         """Map double suffixes to single."""
         suffixes = {
-            "ational": "ate", "tional": "tion", "enci": "ence",
-            "anci": "ance", "izer": "ize", "abli": "able",
-            "alli": "al", "entli": "ent", "eli": "e",
-            "ousli": "ous", "ization": "ize", "ation": "ate",
-            "ator": "ate", "alism": "al", "iveness": "ive",
-            "fulness": "ful", "ousness": "ous", "aliti": "al",
-            "iviti": "ive", "biliti": "ble", "logi": "log",
-            "ivity": "ive", "ly": "",
+            "ational": "ate",
+            "tional": "tion",
+            "enci": "ence",
+            "anci": "ance",
+            "izer": "ize",
+            "abli": "able",
+            "alli": "al",
+            "entli": "ent",
+            "eli": "e",
+            "ousli": "ous",
+            "ization": "ize",
+            "ation": "ate",
+            "ator": "ate",
+            "alism": "al",
+            "iveness": "ive",
+            "fulness": "ful",
+            "ousness": "ous",
+            "aliti": "al",
+            "iviti": "ive",
+            "biliti": "ble",
+            "logi": "log",
+            "ivity": "ive",
+            "ly": "",
         }
         for suffix, replacement in suffixes.items():
             if word.endswith(suffix) and self._has_vowel(word[: -len(suffix)]):
@@ -143,9 +258,22 @@ class PorterStemmer:
     def _step4(self, word: str) -> str:
         """Handle various suffixes."""
         suffixes = [
-            "ement", "ment", "ence", "ance", "able", "ible",
-            "ant", "ent", "ion", "ism", "ate", "iti", "ous",
-            "ive", "ize", "ful",
+            "ement",
+            "ment",
+            "ence",
+            "ance",
+            "able",
+            "ible",
+            "ant",
+            "ent",
+            "ion",
+            "ism",
+            "ate",
+            "iti",
+            "ous",
+            "ive",
+            "ize",
+            "ful",
         ]
         for suffix in suffixes:
             if word.endswith(suffix) and self._has_vowel(word[: -len(suffix)]):
@@ -165,11 +293,7 @@ class PorterStemmer:
             if self._has_vowel(stem):
                 # Only remove if stem has >1 vowel or ends in double consonant
                 vowel_count = len(re.findall(r"[aeiouy]", stem))
-                ends_double = (
-                    len(stem) >= 2
-                    and stem[-1] == stem[-2]
-                    and stem[-1] not in "aeiouy"
-                )
+                ends_double = len(stem) >= 2 and stem[-1] == stem[-2] and stem[-1] not in "aeiouy"
                 if vowel_count > 1 or ends_double:
                     return stem
         return word
@@ -238,11 +362,13 @@ class Tokenizer:
                 # Apply stemming
                 stem = self._stemmer.stem(sub_text) if self._stemmer and self.stem else None
 
-                tokens.append(Token(
-                    text=sub_text,
-                    position=sub_pos,
-                    stem=stem,
-                ))
+                tokens.append(
+                    Token(
+                        text=sub_text,
+                        position=sub_pos,
+                        stem=stem,
+                    )
+                )
 
         return TokenizeResult(tokens=tokens, doc_length=len(tokens))
 

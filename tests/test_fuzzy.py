@@ -1,6 +1,5 @@
 """Tests for the fuzzy matching (Levenshtein distance) module."""
 
-
 from minisearch.fuzzy import (
     damerau_levenshtein_distance,
     find_closest_matches,
@@ -78,8 +77,9 @@ class TestLevenshteinWithinDistance:
         assert levenshtein_within_distance("a", "abcdefghij", 3) is False
 
     def test_symmetry(self):
-        assert levenshtein_within_distance("cat", "cats", 1) == \
-            levenshtein_within_distance("cats", "cat", 1)
+        assert levenshtein_within_distance("cat", "cats", 1) == levenshtein_within_distance(
+            "cats", "cat", 1
+        )
 
 
 class TestFindClosestMatches:
@@ -142,5 +142,6 @@ class TestDamerauLevenshteinDistance:
         assert damerau_levenshtein_distance("abc", "") == 3
 
     def test_symmetry(self):
-        assert damerau_levenshtein_distance("hello", "world") == \
-            damerau_levenshtein_distance("world", "hello")
+        assert damerau_levenshtein_distance("hello", "world") == damerau_levenshtein_distance(
+            "world", "hello"
+        )

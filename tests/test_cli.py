@@ -17,6 +17,7 @@ class TestCLI:
 
     def teardown_method(self):
         import shutil
+
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def _create_test_files(self):
@@ -86,10 +87,16 @@ class TestCLI:
 
     def test_index_with_custom_extensions(self):
         test_dir = self._create_test_files()
-        result = main([
-            "index", str(test_dir), "-d", self.db_path,
-            "--extensions", ".py",
-        ])
+        result = main(
+            [
+                "index",
+                str(test_dir),
+                "-d",
+                self.db_path,
+                "--extensions",
+                ".py",
+            ]
+        )
         assert result == 0
 
     def test_search_with_max_results(self):
@@ -114,6 +121,7 @@ class TestCLI:
     def test_info_empty_index(self):
         # Create empty index
         from minisearch.search import SearchEngine
+
         engine = SearchEngine(index_path=self.db_path)
         engine.save()
 

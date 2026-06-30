@@ -44,28 +44,43 @@ class TestBM25Scorer:
 
     def test_score_term_higher_tf(self):
         score_low = self.scorer.score_term(
-            term_freq=1, doc_freq=10, doc_length=100,
-            avg_doc_length=100, total_docs=1000,
+            term_freq=1,
+            doc_freq=10,
+            doc_length=100,
+            avg_doc_length=100,
+            total_docs=1000,
         )
         score_high = self.scorer.score_term(
-            term_freq=5, doc_freq=10, doc_length=100,
-            avg_doc_length=100, total_docs=1000,
+            term_freq=5,
+            doc_freq=10,
+            doc_length=100,
+            avg_doc_length=100,
+            total_docs=1000,
         )
         assert score_high > score_low
 
     def test_score_term_tf_saturation(self):
         # BM25 has diminishing returns for term frequency
         score_1 = self.scorer.score_term(
-            term_freq=1, doc_freq=10, doc_length=100,
-            avg_doc_length=100, total_docs=1000,
+            term_freq=1,
+            doc_freq=10,
+            doc_length=100,
+            avg_doc_length=100,
+            total_docs=1000,
         )
         score_10 = self.scorer.score_term(
-            term_freq=10, doc_freq=10, doc_length=100,
-            avg_doc_length=100, total_docs=1000,
+            term_freq=10,
+            doc_freq=10,
+            doc_length=100,
+            avg_doc_length=100,
+            total_docs=1000,
         )
         score_100 = self.scorer.score_term(
-            term_freq=100, doc_freq=10, doc_length=100,
-            avg_doc_length=100, total_docs=1000,
+            term_freq=100,
+            doc_freq=10,
+            doc_length=100,
+            avg_doc_length=100,
+            total_docs=1000,
         )
         # Higher TF should still give higher score, but with diminishing returns
         assert score_10 > score_1
@@ -77,9 +92,7 @@ class TestBM25Scorer:
         self.index.add_document("doc2.txt", ["hello", "foo"], doc_length=2)
         self.index.add_document("doc3.txt", ["bar", "baz"], doc_length=2)
 
-        results = self.scorer.score_documents(
-            self.index, ["hello"], max_results=10
-        )
+        results = self.scorer.score_documents(self.index, ["hello"], max_results=10)
 
         assert len(results) == 2  # Only doc1 and doc2 contain "hello"
         # Both should have positive scores
@@ -91,9 +104,7 @@ class TestBM25Scorer:
         self.index.add_document("doc1.txt", ["hello", "hello", "hello"], doc_length=3)
         self.index.add_document("doc2.txt", ["hello", "foo"], doc_length=2)
 
-        results = self.scorer.score_documents(
-            self.index, ["hello"], max_results=10
-        )
+        results = self.scorer.score_documents(self.index, ["hello"], max_results=10)
 
         assert len(results) == 2
         # doc1 should rank higher (more occurrences of "hello")
@@ -101,27 +112,19 @@ class TestBM25Scorer:
 
     def test_score_documents_max_results(self):
         for i in range(20):
-            self.index.add_document(
-                f"doc{i}.txt", ["hello", f"word{i}"], doc_length=2
-            )
+            self.index.add_document(f"doc{i}.txt", ["hello", f"word{i}"], doc_length=2)
 
-        results = self.scorer.score_documents(
-            self.index, ["hello"], max_results=5
-        )
+        results = self.scorer.score_documents(self.index, ["hello"], max_results=5)
 
         assert len(results) == 5
 
     def test_score_documents_empty_index(self):
-        results = self.scorer.score_documents(
-            self.index, ["hello"], max_results=10
-        )
+        results = self.scorer.score_documents(self.index, ["hello"], max_results=10)
         assert len(results) == 0
 
     def test_score_documents_no_matching_terms(self):
         self.index.add_document("doc1.txt", ["hello", "world"], doc_length=2)
-        results = self.scorer.score_documents(
-            self.index, ["nonexistent"], max_results=10
-        )
+        results = self.scorer.score_documents(self.index, ["nonexistent"], max_results=10)
         assert len(results) == 0
 
     def test_score_documents_multi_term_query(self):
@@ -129,9 +132,7 @@ class TestBM25Scorer:
         self.index.add_document("doc2.txt", ["hello", "foo"], doc_length=2)
         self.index.add_document("doc3.txt", ["world", "foo"], doc_length=2)
 
-        results = self.scorer.score_documents(
-            self.index, ["hello", "world"], max_results=10
-        )
+        results = self.scorer.score_documents(self.index, ["hello", "world"], max_results=10)
 
         # doc1 should rank highest (contains both terms)
         assert len(results) >= 1

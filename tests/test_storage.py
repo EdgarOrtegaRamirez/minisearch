@@ -18,6 +18,7 @@ class TestSearchStorage:
 
     def teardown_method(self):
         import shutil
+
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def test_save_and_load(self):
@@ -172,6 +173,7 @@ class TestSearchStorage:
         storage.save(index)
 
         import sqlite3
+
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.execute("PRAGMA journal_mode")
         mode = cursor.fetchone()[0]

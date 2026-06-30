@@ -75,8 +75,9 @@ class BM25Scorer:
         # BM25 IDF formula with +1 floor to avoid negative values
         return math.log((total_docs - doc_freq + 0.5) / (doc_freq + 0.5) + 1.0)
 
-    def score_term(self, term_freq: int, doc_freq: int, doc_length: int,
-                   avg_doc_length: float, total_docs: int) -> float:
+    def score_term(
+        self, term_freq: int, doc_freq: int, doc_length: int, avg_doc_length: float, total_docs: int
+    ) -> float:
         """
         Compute BM25 score for a single term in a document.
 
@@ -160,13 +161,15 @@ class BM25Scorer:
             doc_info = index.get_document(doc_id)
             if doc_info is None:
                 continue
-            results.append(ScoredDocument(
-                doc_id=doc_id,
-                score=round(score, 4),
-                path=doc_info.path,
-                title=doc_info.title,
-                metadata=doc_info.metadata,
-            ))
+            results.append(
+                ScoredDocument(
+                    doc_id=doc_id,
+                    score=round(score, 4),
+                    path=doc_info.path,
+                    title=doc_info.title,
+                    metadata=doc_info.metadata,
+                )
+            )
 
         return results
 

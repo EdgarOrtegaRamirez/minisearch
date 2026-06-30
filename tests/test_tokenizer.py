@@ -11,28 +11,31 @@ class TestPorterStemmer:
     def setup_method(self):
         self.stemmer = PorterStemmer()
 
-    @pytest.mark.parametrize("word,expected", [
-        ("running", "run"),
-        ("flies", "fli"),
-        ("tries", "tri"),
-        ("caress", "caress"),
-        ("cats", "cat"),
-        (" ponies", "poni"),
-        ("studies", "studi"),
-        ("hopping", "hop"),
-        ("sing", "sing"),
-        ("troubled", "troubl"),
-        ("amazing", "amaz"),
-        ("connection", "connect"),
-        ("relational", "rel"),
-        ("sensitivity", "sensit"),
-        ("organization", "organ"),
-        ("computer", "comput"),
-        ("walking", "walk"),
-        ("jumping", "jump"),
-        ("beautiful", "beauti"),
-        ("quickly", "quick"),
-    ])
+    @pytest.mark.parametrize(
+        "word,expected",
+        [
+            ("running", "run"),
+            ("flies", "fli"),
+            ("tries", "tri"),
+            ("caress", "caress"),
+            ("cats", "cat"),
+            (" ponies", "poni"),
+            ("studies", "studi"),
+            ("hopping", "hop"),
+            ("sing", "sing"),
+            ("troubled", "troubl"),
+            ("amazing", "amaz"),
+            ("connection", "connect"),
+            ("relational", "rel"),
+            ("sensitivity", "sensit"),
+            ("organization", "organ"),
+            ("computer", "comput"),
+            ("walking", "walk"),
+            ("jumping", "jump"),
+            ("beautiful", "beauti"),
+            ("quickly", "quick"),
+        ],
+    )
     def test_stemming(self, word, expected):
         result = self.stemmer.stem(word)
         assert result == expected

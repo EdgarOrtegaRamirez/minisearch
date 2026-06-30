@@ -102,11 +102,9 @@ class QueryParser:
 
         # Check for leading binary operators
         if self._is_keyword_at(self.pos):
-            kw = self.query[self.pos:self.pos + 3].upper()
+            kw = self.query[self.pos : self.pos + 3].upper()
             if kw in ("AND", "OR "):
-                raise QueryParseError(
-                    f"Unexpected keyword '{kw}' at start of query"
-                )
+                raise QueryParseError(f"Unexpected keyword '{kw}' at start of query")
 
         node = self._parse_or()
         self._skip_whitespace()
@@ -134,9 +132,7 @@ class QueryParser:
         if self.pos >= self.length or self.query[self.pos] != ch:
             expected = f"'{ch}'"
             got = f"'{self.query[self.pos]}'" if self.pos < self.length else "end of input"
-            raise QueryParseError(
-                f"Expected {expected} but got {got} at position {self.pos}"
-            )
+            raise QueryParseError(f"Expected {expected} but got {got} at position {self.pos}")
         self.pos += 1
 
     def _parse_or(self) -> QueryNode:
@@ -166,7 +162,11 @@ class QueryParser:
             else:
                 # Implicit AND: two consecutive terms
                 self._skip_whitespace()
-                if self.pos < self.length and self.query[self.pos] not in ("(", '"', ")",):
+                if self.pos < self.length and self.query[self.pos] not in (
+                    "(",
+                    '"',
+                    ")",
+                ):
                     # Check if next token is a keyword
                     if not self._is_keyword_at(self.pos):
                         right = self._parse_unary()
@@ -282,7 +282,7 @@ class QueryParser:
         to avoid matching prefixes of terms.
         """
         self._skip_whitespace()
-        remaining = self.query[self.pos:]
+        remaining = self.query[self.pos :]
         if remaining.upper().startswith(keyword):
             after = self.pos + len(keyword)
             if after >= self.length or not remaining[len(keyword)].isalnum():

@@ -49,9 +49,9 @@ def levenshtein_distance(s1: str, s2: str) -> int:
         for i in range(1, len1 + 1):
             cost = 0 if s1[i - 1] == s2[j - 1] else 1
             curr_row[i] = min(
-                prev_row[i] + 1,       # deletion
-                curr_row[i - 1] + 1,   # insertion
-                prev_row[i - 1] + cost, # substitution
+                prev_row[i] + 1,  # deletion
+                curr_row[i - 1] + 1,  # insertion
+                prev_row[i - 1] + cost,  # substitution
             )
         prev_row, curr_row = curr_row, prev_row
 
@@ -185,17 +185,12 @@ def damerau_levenshtein_distance(s1: str, s2: str) -> int:
         for i in range(1, len1 + 1):
             cost = 0 if s1[i - 1] == s2[j - 1] else 1
             curr_row[i] = min(
-                prev_row[i] + 1,           # deletion
-                curr_row[i - 1] + 1,       # insertion
-                prev_row[i - 1] + cost,    # substitution
+                prev_row[i] + 1,  # deletion
+                curr_row[i - 1] + 1,  # insertion
+                prev_row[i - 1] + cost,  # substitution
             )
             # Transposition (optimal string alignment variant)
-            if (
-                i > 1
-                and j > 1
-                and s1[i - 1] == s2[j - 2]
-                and s1[i - 2] == s2[j - 1]
-            ):
+            if i > 1 and j > 1 and s1[i - 1] == s2[j - 2] and s1[i - 2] == s2[j - 1]:
                 curr_row[i] = min(curr_row[i], prev_prev[i - 2] + 1)
 
         # Rotate rows

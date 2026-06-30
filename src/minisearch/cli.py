@@ -36,12 +36,14 @@ def create_parser() -> argparse.ArgumentParser:
         help="Files or directories to index",
     )
     index_parser.add_argument(
-        "-d", "--db",
+        "-d",
+        "--db",
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
     index_parser.add_argument(
-        "-r", "--recursive",
+        "-r",
+        "--recursive",
         action="store_true",
         default=True,
         help="Recurse into subdirectories (default: True)",
@@ -75,18 +77,21 @@ def create_parser() -> argparse.ArgumentParser:
         help="Search query",
     )
     search_parser.add_argument(
-        "-d", "--db",
+        "-d",
+        "--db",
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
     search_parser.add_argument(
-        "-n", "--max-results",
+        "-n",
+        "--max-results",
         type=int,
         default=10,
         help="Maximum number of results (default: 10)",
     )
     search_parser.add_argument(
-        "-s", "--min-score",
+        "-s",
+        "--min-score",
         type=float,
         default=0.0,
         help="Minimum score threshold (default: 0.0)",
@@ -111,7 +116,8 @@ def create_parser() -> argparse.ArgumentParser:
     # Info command
     info_parser = subparsers.add_parser("info", help="Show index statistics")
     info_parser.add_argument(
-        "-d", "--db",
+        "-d",
+        "--db",
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
@@ -119,12 +125,14 @@ def create_parser() -> argparse.ArgumentParser:
     # Clear command
     clear_parser = subparsers.add_parser("clear", help="Clear the index")
     clear_parser.add_argument(
-        "-d", "--db",
+        "-d",
+        "--db",
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
     clear_parser.add_argument(
-        "-y", "--yes",
+        "-y",
+        "--yes",
         action="store_true",
         help="Skip confirmation",
     )
@@ -132,12 +140,14 @@ def create_parser() -> argparse.ArgumentParser:
     # Export command
     export_parser = subparsers.add_parser("export", help="Export index as JSON")
     export_parser.add_argument(
-        "-d", "--db",
+        "-d",
+        "--db",
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
     export_parser.add_argument(
-        "-o", "--output",
+        "-o",
+        "--output",
         help="Output file (default: stdout)",
     )
 
@@ -231,7 +241,7 @@ def cmd_search(args: argparse.Namespace) -> int:
             print("No results found.")
             return 0
 
-        print(f"Found {len(results)} results ({elapsed*1000:.1f}ms):\n")
+        print(f"Found {len(results)} results ({elapsed * 1000:.1f}ms):\n")
 
         for i, result in enumerate(results, 1):
             location = result.path
@@ -264,7 +274,7 @@ def _show_context(path: str, line_number: int, context_lines: int) -> None:
         end = min(len(lines), line_number + context_lines)
         for i in range(start, end):
             marker = ">>>" if i == line_number - 1 else "   "
-            print(f"     {marker} {i+1:4d} | {lines[i]}")
+            print(f"     {marker} {i + 1:4d} | {lines[i]}")
     except (OSError, UnicodeDecodeError):
         pass
 
@@ -298,7 +308,7 @@ def cmd_info(args: argparse.Namespace) -> int:
 
     print("Top 20 terms by frequency:")
     print(f"  {'Term':<20} {'Doc Freq':>10} {'Total Freq':>12}")
-    print(f"  {'-'*20} {'-'*10} {'-'*12}")
+    print(f"  {'-' * 20} {'-' * 10} {'-' * 12}")
     for term, doc_freq, total_freq in term_freqs[:20]:
         print(f"  {term:<20} {doc_freq:>10} {total_freq:>12}")
 

@@ -283,11 +283,13 @@ class InvertedIndex:
         for term, term_data in data.get("terms", {}).items():
             ti = TermInfo(doc_freq=term_data["doc_freq"])
             for p_data in term_data.get("postings", []):
-                ti.postings.append(PostingEntry(
-                    doc_id=p_data["doc_id"],
-                    term_freq=p_data["term_freq"],
-                    positions=p_data.get("positions", []),
-                ))
+                ti.postings.append(
+                    PostingEntry(
+                        doc_id=p_data["doc_id"],
+                        term_freq=p_data["term_freq"],
+                        positions=p_data.get("positions", []),
+                    )
+                )
             index._terms[term] = ti
 
         return index

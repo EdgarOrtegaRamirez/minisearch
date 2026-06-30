@@ -1,7 +1,5 @@
 """Tests for the inverted index module."""
 
-
-
 from minisearch.index import (
     InvertedIndex,
 )

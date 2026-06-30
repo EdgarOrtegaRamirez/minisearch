@@ -152,6 +152,7 @@ class TestNormalizeQueryTerm:
 
     def test_with_stemmer(self):
         from minisearch.tokenizer import PorterStemmer
+
         stemmer = PorterStemmer()
         assert normalize_query_term("Running", stemmer) == "run"
 

@@ -15,6 +15,7 @@ class TestSearchEngine:
 
     def teardown_method(self):
         import shutil
+
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def test_index_and_search(self):

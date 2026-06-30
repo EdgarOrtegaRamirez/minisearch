@@ -28,23 +28,70 @@ from minisearch.tokenizer import Tokenizer, TokenizeResult
 
 # Default file extensions to index
 DEFAULT_INDEX_EXTENSIONS = {
-    ".txt", ".md", ".rst", ".py", ".js", ".ts", ".jsx", ".tsx",
-    ".java", ".go", ".rs", ".c", ".cpp", ".h", ".hpp",
-    ".rb", ".php", ".swift", ".kt", ".scala",
-    ".html", ".css", ".scss", ".less",
-    ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf",
-    ".xml", ".csv", ".tsv",
-    ".sh", ".bash", ".zsh", ".fish",
-    ".sql", ".r", ".lua", ".perl", ".pl",
+    ".txt",
+    ".md",
+    ".rst",
+    ".py",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".java",
+    ".go",
+    ".rs",
+    ".c",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".rb",
+    ".php",
+    ".swift",
+    ".kt",
+    ".scala",
+    ".html",
+    ".css",
+    ".scss",
+    ".less",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".xml",
+    ".csv",
+    ".tsv",
+    ".sh",
+    ".bash",
+    ".zsh",
+    ".fish",
+    ".sql",
+    ".r",
+    ".lua",
+    ".perl",
+    ".pl",
 }
 
 # Directories to skip during indexing
 SKIP_DIRECTORIES = {
-    ".git", ".svn", ".hg",
-    "node_modules", "__pycache__", ".tox", ".mypy_cache",
-    ".pytest_cache", "venv", ".venv", "env", ".env",
-    "dist", "build", ".eggs",
-    ".idea", ".vscode",
+    ".git",
+    ".svn",
+    ".hg",
+    "node_modules",
+    "__pycache__",
+    ".tox",
+    ".mypy_cache",
+    ".pytest_cache",
+    "venv",
+    ".venv",
+    "env",
+    ".env",
+    "dist",
+    "build",
+    ".eggs",
+    ".idea",
+    ".vscode",
     "target",  # Rust
     "vendor",  # Go
 }
@@ -70,10 +117,7 @@ class SearchResult:
         self.metadata = metadata or {}
 
     def __repr__(self) -> str:
-        return (
-            f"SearchResult(path={self.path!r}, score={self.score}, "
-            f"line={self.line_number})"
-        )
+        return f"SearchResult(path={self.path!r}, score={self.score}, line={self.line_number})"
 
 
 class SearchEngine:
@@ -246,10 +290,7 @@ class SearchEngine:
 
         for root, dirs, files in os.walk(dir_path):
             # Skip hidden and known non-essential directories
-            dirs[:] = [
-                d for d in dirs
-                if d not in SKIP_DIRECTORIES and not d.startswith(".")
-            ]
+            dirs[:] = [d for d in dirs if d not in SKIP_DIRECTORIES and not d.startswith(".")]
 
             for filename in sorted(files):
                 file_path = Path(root) / filename
@@ -342,9 +383,7 @@ class SearchEngine:
         elif node.type == QueryNodeType.AND:
             if len(node.children) < 2:
                 if node.children:
-                    return self._execute_query(
-                        node.children[0], max_results, min_score
-                    )
+                    return self._execute_query(node.children[0], max_results, min_score)
                 return []
             left = self._execute_query(node.children[0], max_results * 2, 0)
             right = self._execute_query(node.children[1], max_results * 2, 0)
@@ -353,9 +392,7 @@ class SearchEngine:
         elif node.type == QueryNodeType.OR:
             if len(node.children) < 2:
                 if node.children:
-                    return self._execute_query(
-                        node.children[0], max_results, min_score
-                    )
+                    return self._execute_query(node.children[0], max_results, min_score)
                 return []
             left = self._execute_query(node.children[0], max_results, min_score)
             right = self._execute_query(node.children[1], max_results, min_score)
@@ -458,9 +495,7 @@ class SearchEngine:
             # Check if positions form a consecutive sequence
             if self._is_consecutive_phrase(all_positions):
                 # Score based on BM25 for the first term
-                score = self.scorer.score_documents(
-                    self.index, [terms[0]], max_results=1
-                )
+                score = self.scorer.score_documents(self.index, [terms[0]], max_results=1)
                 for s in score:
                     if s.doc_id == doc_id:
                         matching_docs.append((doc_id, s.score))
@@ -478,12 +513,14 @@ class SearchEngine:
             doc_info = self.index.get_document(doc_id)
             if doc_info:
                 snippet = self._get_phrase_snippet(doc_info.path, terms)
-                results.append(SearchResult(
-                    path=doc_info.path,
-                    score=round(score, 4),
-                    title=doc_info.title,
-                    snippet=snippet,
-                ))
+                results.append(
+                    SearchResult(
+                        path=doc_info.path,
+                        score=round(score, 4),
+                        title=doc_info.title,
+                        snippet=snippet,
+                    )
+                )
 
         return results
 
