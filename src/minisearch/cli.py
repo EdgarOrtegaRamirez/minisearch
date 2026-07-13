@@ -121,6 +121,11 @@ def create_parser() -> argparse.ArgumentParser:
         default=".minisearch.db",
         help="Path to the index database (default: .minisearch.db)",
     )
+    info_parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output stats as JSON",
+    )
 
     # Clear command
     clear_parser = subparsers.add_parser("clear", help="Clear the index")
@@ -287,6 +292,17 @@ def cmd_info(args: argparse.Namespace) -> int:
 
     if stats["num_documents"] == 0:
         print("Index is empty.")
+        return 0
+
+    if getattr(args, "json", False):
+        output = {
+            "index": args.db,
+            "num_documents": stats["num_documents"],
+            "num_terms": stats["num_terms"],
+            "total_tokens": stats["total_tokens"],
+            "avg_doc_length": stats["avg_doc_length"],
+        }
+        print(json.dumps(output, indent=2))
         return 0
 
     print(f"Index: {args.db}")
