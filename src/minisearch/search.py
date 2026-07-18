@@ -365,18 +365,22 @@ class SearchEngine:
     ) -> list[SearchResult]:
         """Execute a query AST node and return results."""
         if node.type == QueryNodeType.TERM:
+            assert node.term is not None
             term = normalize_query_term(node.term, self.tokenizer._stemmer)
             return self._search_simple([term], max_results, min_score)
 
         elif node.type == QueryNodeType.PHRASE:
+            assert node.phrase is not None
             terms = [normalize_query_term(t, self.tokenizer._stemmer) for t in node.phrase]
             return self._search_phrase(terms, max_results, min_score)
 
         elif node.type == QueryNodeType.PREFIX:
+            assert node.prefix is not None
             prefix = normalize_query_term(node.prefix, self.tokenizer._stemmer)
             return self._search_prefix(prefix, max_results, min_score)
 
         elif node.type == QueryNodeType.FUZZY:
+            assert node.fuzzy_term is not None
             term = normalize_query_term(node.fuzzy_term, self.tokenizer._stemmer)
             return self._search_fuzzy(term, node.max_distance, max_results, min_score)
 
@@ -495,8 +499,8 @@ class SearchEngine:
             # Check if positions form a consecutive sequence
             if self._is_consecutive_phrase(all_positions):
                 # Score based on BM25 for the first term
-                score = self.scorer.score_documents(self.index, [terms[0]], max_results=1)
-                for s in score:
+                scored_docs = self.scorer.score_documents(self.index, [terms[0]], max_results=1)
+                for s in scored_docs:
                     if s.doc_id == doc_id:
                         matching_docs.append((doc_id, s.score))
                         break

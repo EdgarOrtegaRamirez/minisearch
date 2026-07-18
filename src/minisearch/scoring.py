@@ -140,16 +140,16 @@ class BM25Scorer:
 
             doc_freq = term_info.doc_freq
             for posting in term_info.postings:
-                score = self.score_term(
+                doc_info = index.get_document(posting.doc_id)
+                doc_length = doc_info.length if doc_info else 0
+                score_val = self.score_term(
                     term_freq=posting.term_freq,
                     doc_freq=doc_freq,
-                    doc_length=index.get_document(posting.doc_id).length
-                    if index.get_document(posting.doc_id)
-                    else 0,
+                    doc_length=doc_length,
                     avg_doc_length=avg_doc_length,
                     total_docs=total_docs,
                 )
-                doc_scores[posting.doc_id] = doc_scores.get(posting.doc_id, 0.0) + score
+                doc_scores[posting.doc_id] = doc_scores.get(posting.doc_id, 0.0) + score_val
 
         # Sort by score and return top results
         sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1], reverse=True)
