@@ -114,10 +114,9 @@ class TestSearchStorage:
                 doc_length=10,
             )
 
-        storage = SearchStorage(self.db_path)
-        storage.save(index)
-        loaded = storage.load()
-        storage.close()
+        with SearchStorage(self.db_path) as storage:
+            storage.save(index)
+            loaded = storage.load()
 
         assert loaded.num_documents == 100
         assert loaded.num_terms == 1000  # 100 docs * 10 unique terms each
